@@ -1,11 +1,21 @@
-h2 {
-  text-transform: uppercase;
-  line-height: 25px;
-  font-size: 18px;
+@import "src/assets/base-profile-timeline";
+
+.card {
+  border-radius: 11px;
 }
 
-.formation-edition {
-  overflow-x: hidden !important;
-  height: 500px;
-  overflow-y: scroll;
+.resume-item .resume-data {
+  padding-bottom: 25px;
+
+  .year {
+    text-align: center;
+
+    &:before {
+      content: "\f19d";
+    }
+
+    &:after {
+      height: 100%;
+    }
+  }
 }

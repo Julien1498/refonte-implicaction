@@ -1,5 +1,9 @@
-h2 {
-  text-transform: uppercase;
-  line-height: 25px;
-  font-size: 18px;
+@import "src/assets/base-profile-timeline";
+
+.resume-item .resume-data .year:before {
+  content: "\f0b1";
+}
+
+.card {
+  border-radius: 11px;
 }

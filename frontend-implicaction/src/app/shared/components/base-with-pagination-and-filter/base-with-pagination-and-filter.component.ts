@@ -5,7 +5,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Criteria} from '../../models/Criteria';
 
 @Component({template: ''})
-export class BaseWithPaginationComponent<T, C extends Criteria> {
+export class BaseWithPaginationAndFilterComponent<T, C extends Criteria> {
 
   readonly DEFAULT_ROWS_PER_PAGE_OPTIONS = Constants.ROWS_PER_PAGE_OPTIONS;
 
@@ -39,18 +39,16 @@ export class BaseWithPaginationComponent<T, C extends Criteria> {
     this.innerPaginate();
   }
 
-  /**
-   * Méthode à implémenter qui lance le chargement des données
-   */
   protected innerPaginate(): void {
+    // Méthode à implémenter qui s'occupe de charger les données. Elle est appelée par la méthode paginate
   }
 
   /**
    * Méthode qui ajoute les paramètres de l'url dans la variable correspondante
    * la variable correspond à un critère de recherche ou à la pagination
+   * @param filterKeys ensemble des clés à récupérer depuis les query params de l'url
    */
   protected async getFilterFromQueryParams(filterKeys: string[]): Promise<void> {
-    // TODO: voir si y'a un moyen plus élégant avec typeof
     const pageableKeys = ['rows', 'page', 'sortOrder', 'sortBy'];
     return new Promise(resolve => {
       this.route
@@ -68,6 +66,11 @@ export class BaseWithPaginationComponent<T, C extends Criteria> {
         });
     });
   }
+
+  /**
+   * default trackBy function
+   */
+  trackByItemId = (index: number, item: T) => (item as any).id;
 
   /**
    * @return any les filtres de recherche auxquels sont ajoutés les filtres de pagination
