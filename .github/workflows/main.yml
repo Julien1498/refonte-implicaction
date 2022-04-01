@@ -67,12 +67,12 @@ jobs:
       - run: docker-compose up -d
       - run: mvn spring-boot:run -Dspring-boot.run.profiles=local &
       - run: sleep 120s
-      - run: ./k6 run -e API_URI=localhost -e PORT=8080 k6_test/test_api.js
-      - run: ./k6 run -e API_URI=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
-      - run: ./k6 run -e API_URI=localhost -e PORT=8080 k6_test/test_api.js
-      - run: ./k6 run -e API_URI=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
-      - run: ./k6 run -e API_URI=localhost -e PORT=8080 k6_test/test_api.js
-      - run: ./k6 run -e API_URI=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 k6_test/test_api.js
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 k6_test/test_api.js
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 k6_test/test_api.js
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
   unit-and-sonar:
     name: Unit test and Sonar
     runs-on: ubuntu-latest
