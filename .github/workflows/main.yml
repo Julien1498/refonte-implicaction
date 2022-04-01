@@ -112,16 +112,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build db image
-        run: docker build -t ${{ github.event.repository.name }}/implicaction-db:latest -f Dockerfiles/Dockerfile-mysql .
+        run: docker build -t ${{ github.repository_owner }}/implicaction-db:latest -f Dockerfiles/Dockerfile-mysql .
       - name: Build app image
-        run: docker build -t ${{ github.event.repository.name }}/implicaction-app:latest -f Dockerfiles/Dockerfile-spring .
+        run: docker build -t ${{ github.repository_owner }}/implicaction-app:latest -f Dockerfiles/Dockerfile-spring .
       - name: Push db
         run: |
-          docker image tag ${{ github.event.repository.name }}/implicaction-db:latest \
-          ${{ github.event.repository.name }}/implicaction-db:${{ steps.previoustag.outputs.tag }}
-          docker push ${{ github.event.repository.name }}/implicaction-db:${{ steps.previoustag.outputs.tag }}
+          docker image tag ${{ github.repository_owner }}/implicaction-db:latest \
+          ${{ github.repository_owner }}/implicaction-db:${{ steps.previoustag.outputs.tag }}
+          docker push ${{ github.repository_owner }}/implicaction-db:${{ steps.previoustag.outputs.tag }}
       - name: Push app
         run: |
-          docker image tag ${{ github.event.repository.name }}/implicaction-app:latest \
-          ${{ github.event.repository.name }}/implicaction-app:${{ steps.previoustag.outputs.tag }}
-          docker push ${{ github.event.repository.name }}/implicaction-app:${{ steps.previoustag.outputs.tag }}
+          docker image tag ${{ github.repository_owner }}/implicaction-app:latest \
+          ${{ github.repository_owner }}/implicaction-app:${{ steps.previoustag.outputs.tag }}
+          docker push ${{ github.repository_owner }}/implicaction-app:${{ steps.previoustag.outputs.tag }}
