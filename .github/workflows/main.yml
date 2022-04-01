@@ -46,15 +46,18 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Install k6
+        run: |
+            curl https://github.com/loadimpact/k6/releases/download/v0.26.2/k6-v0.26.2-linux64.tar.gz -L | tar xvz --strip-components 1
       - run: docker-compose up -d
       - run: mvn spring-boot:run -Dspring-boot.run.profiles=local &
       - run: sleep 45s
       - name: Run k6 local test
-        uses: grafana/k6-action@v0.2.0
-        with:
-          filename: ./k6/test_api.js
-          flags: --vus 50 --duration 10s
-    #      - run: docker run --rm -i grafana/k6 run - < ./k6/test_api.js
+#        uses: grafana/k6-action@v0.2.0
+#        with:
+#          filename: ./k6/test_api.js
+#          flags: --vus 50 --duration 10s
+      - run: ./k6 run ./k6/test_api.js
     #      - run: docker run --rm -i grafana/k6 --vus 10 --duration 30s run - < ./k6/test_api.js
     #      - run: docker run --rm -i grafana/k6 run - < ./k6/test_jobs_api.js
     #      - run: docker run --rm -i grafana/k6 --vus 10 --duration 30s run - < ./k6/test_jobs_api.js
