@@ -101,10 +101,18 @@ context('Navigation', () => {
     cy.get('#ALTERNRadio').click()
   })
 
-  it('cy.admin() - Testing admin page', () => {
+  it('cy.admin() - Testing admin page Admin Users', () => {
     cy.get('.navbar-expand-lg').contains('Admin').click()
     cy.get('[ng-reflect-router-link="/admin/users"]').click()
+  })
+
+  it('cy.admin() - Testing admin page Jobs', () => {
+    cy.get('.navbar-expand-lg').contains('Admin').click()
     cy.get('[ng-reflect-router-link="/admin/jobs"]').click()
+  })
+
+  it('cy.admin() - Testing admin page add Companies', () => {
+    cy.get('.navbar-expand-lg').contains('Admin').click()
     cy.get('[ng-reflect-router-link="/admin/companies"]').click()
     cy.get('button.btn.btn-success.fw-bold').click()
     cy.get('form.ng-untouched > :nth-child(1) > #nameInput').type('Gologole')
@@ -112,6 +120,10 @@ context('Navigation', () => {
     cy.get('#urlInput').type('https://gologole.fr')
     cy.get('.ql-editor').type('Desc de l\'entreprise')
     cy.get('button.btn.btn-primary.w-50').click()
+  })
+  it('cy.admin() - Testing admin page search Companies', () => {
+    cy.get('.navbar-expand-lg').contains('Admin').click()
+    cy.get('[ng-reflect-router-link="/admin/companies"]').click()
     cy.get('#nameInput').type('Gologole{enter}')
   })
 })
