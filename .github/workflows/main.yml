@@ -66,13 +66,13 @@ jobs:
             curl https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz -L | tar xvz --strip-components 1
       - run: docker-compose up -d
       - run: mvn spring-boot:run -Dspring-boot.run.profiles=local &
-      - run: sleep 45s
+      - run: sleep 80s
       - name: Run k6 local test
 #        uses: grafana/k6-action@v0.2.0
 #        with:
 #          filename: ./k6/test_api.js
 #          flags: --vus 50 --duration 10s
-        run: ./k6 run --vus 50 --duration 10s k6_test/test_api.js
+        run: ./k6 run k6_test/test_api.js
     #      - run: docker run --rm -i grafana/k6 --vus 10 --duration 30s run - < ./k6/test_api.js
     #      - run: docker run --rm -i grafana/k6 run - < ./k6/test_jobs_api.js
     #      - run: docker run --rm -i grafana/k6 --vus 10 --duration 30s run - < ./k6/test_jobs_api.js
