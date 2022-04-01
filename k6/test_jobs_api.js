@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { sleep, check } from 'k6';
 
 //Local: host.docker.internal
-const baseUrl = "host.docker.internal";
+const baseUrl = "localhost";
 
 function getToken() {
     const payload = JSON.stringify({
