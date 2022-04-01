@@ -1,7 +1,7 @@
 import http from 'k6/http';
 import { sleep, check } from 'k6';
 
-const API_URL = `${__ENV.API_URI}`;
+const API_URL = `${__ENV.API_URL}`;
 const PORT = `${__ENV.PORT}`;
 
 function getToken() {
