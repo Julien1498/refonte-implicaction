@@ -48,7 +48,7 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Install k6
         run: |
-            curl https://github.com/loadimpact/k6/releases/download/v0.26.2/k6-v0.26.2-linux64.tar.gz -L | tar xvz --strip-components 1
+            curl https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz -L | tar xvz --strip-components 1
       - run: docker-compose up -d
       - run: mvn spring-boot:run -Dspring-boot.run.profiles=local &
       - run: sleep 45s
