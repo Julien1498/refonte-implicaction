@@ -1,6 +1,9 @@
 import http from 'k6/http';
 import { sleep, check } from 'k6';
 
+const API_URL = '${__ENV.API_URI}';
+const PORT = '${__ENV.PORT}';
+
 function getToken() {
     const payload = JSON.stringify({
         username: 'admin',
@@ -12,7 +15,7 @@ function getToken() {
         },
     };
 
-    const loginRes = http.post('http://{__ENV.API_URL}:{__ENV.PORT}/api/auth/login', payload, params);
+    const loginRes = http.post('http://'+API_URL+':'+PORT+'/api/auth/login', payload, params);
 
     check(loginRes, {
         'Login status is 200': (r) => r.status === 200,
@@ -30,7 +33,7 @@ export default function () {
         },
     };
 
-    const res = http.get('http://{__ENV.API_URL}:{__ENV.PORT}/api/companies');
+    const res = http.get('http://'+API_URL+':'+PORT+'/api/companies');
 
     check(res, {
         'Status companies is 200': (r) => r.status === 200,
@@ -66,13 +69,13 @@ export default function () {
         },
     };
 
-    const resCreateJob = http.post('http://{__ENV.API_URL}:{__ENV.PORT}/api/job-postings', payload, params)
+    const resCreateJob = http.post('http://'+API_URL+':'+PORT+'/api/job-postings', payload, params)
 
     check(resCreateJob, {'Status create job is 200': (r) => r.status === 200})
 
     const jobId = resCreateJob.json().id;
 
-    const resGetJobCreated = http.get('http://{__ENV.API_URL}:{__ENV.PORT}/api/job-postings/' + jobId);
+    const resGetJobCreated = http.get('http://'+API_URL+':'+PORT+'/api/job-postings/' + jobId);
 
     check(resGetJobCreated, {'Status get created job is 200': (r) => r.status === 200})
 
