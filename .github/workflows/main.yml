@@ -7,39 +7,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  cypress:
-    name: Cypress
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Set up Node 14
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - run: docker-compose up -d
-      - run: mvn spring-boot:run -Dspring-boot.run.profiles=local &
-      - name: Cypress install and test
-        uses: cypress-io/github-action@v2
-        with:
-          record: true
-          wait-on: 'http://localhost:8080'
-          wait-on-timeout: 120
-        env:
-          CYPRESS_RECORD_KEY: ${{secrets.CYPRESS_TOKEN}}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   k6:
     name: K6 load test
     runs-on: ubuntu-latest
@@ -102,10 +69,43 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -X -Dsonar.projectKey=Julien1498_refonte-implicaction -Dsonar.verbose=true
-
+  cypress:
+    name: Cypress
+    needs: unit-and-sonar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Set up Node 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: docker-compose up -d
+      - run: mvn spring-boot:run -Dspring-boot.run.profiles=local &
+      - name: Cypress install and test
+        uses: cypress-io/github-action@v2
+        with:
+          record: true
+          wait-on: 'http://localhost:8080'
+          wait-on-timeout: 120
+        env:
+          CYPRESS_RECORD_KEY: ${{secrets.CYPRESS_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build-and-push:
     name: Building and push docker image on Github container
-    needs: unit-and-sonar
+    needs: cypress
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
