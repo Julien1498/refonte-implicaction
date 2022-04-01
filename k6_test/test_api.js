@@ -12,7 +12,7 @@ function getToken() {
         },
     };
 
-    const loginRes = http.post("http://{__ENV.API_URL}:{__ENV.PORT}/api/auth/login", payload, params);
+    const loginRes = http.post('http://{__ENV.API_URL}:{__ENV.PORT}/api/auth/login', payload, params);
 
     check(loginRes, {
         'Login status is 200': (r) => r.status === 200,
@@ -35,7 +35,7 @@ export default function () {
         },
     };
 
-    should_return_200("http://{__ENV.API_URL}:{__ENV.PORT}/api/job-postings/validated");
+    should_return_200('http://{__ENV.API_URL}:{__ENV.PORT}/api/job-postings/validated');
 
     sleep(1);
 }

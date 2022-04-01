@@ -12,7 +12,7 @@ function getToken() {
         },
     };
 
-    const loginRes = http.post("http://{__ENV.API_URL}:{__ENV.PORT}/api/auth/login", payload, params);
+    const loginRes = http.post('http://{__ENV.API_URL}:{__ENV.PORT}/api/auth/login', payload, params);
 
     check(loginRes, {
         'Login status is 200': (r) => r.status === 200,
@@ -30,7 +30,7 @@ export default function () {
         },
     };
 
-    const res = http.get("http://{__ENV.API_URL}:{__ENV.PORT}/api/companies");
+    const res = http.get('http://{__ENV.API_URL}:{__ENV.PORT}/api/companies');
 
     check(res, {
         'Status companies is 200': (r) => r.status === 200,
@@ -39,25 +39,25 @@ export default function () {
     const payload = JSON.stringify({
         apply: true,
         archive: true,
-        businessSector: "AGROALIMENTAIRE",
+        businessSector: 'AGROALIMENTAIRE',
         company: {
-            description: "string",
+            description: 'string',
             id: 145,
-            logo: "string",
-            name: "string",
-            url: "string"
+            logo: 'string',
+            name: 'string',
+            url: 'string'
         },
-        contractType: "CDI",
-        createdAt: "2022-03-31T12:53:50.194Z",
-        description: "string",
+        contractType: 'CDI',
+        createdAt: '2022-03-31T12:53:50.194Z',
+        description: 'string',
         id: 0,
-        keywords: "string",
-        location: "string",
+        keywords: 'string',
+        location: 'string',
         posterId: 0,
-        posterName: "string",
-        salary: "string",
-        shortDescription: "string",
-        title: "string",
+        posterName: 'string',
+        salary: 'string',
+        shortDescription: 'string',
+        title: 'string',
         valid: true
     });
     const params = {
@@ -66,13 +66,13 @@ export default function () {
         },
     };
 
-    const resCreateJob = http.post("http://{__ENV.API_URL}:{__ENV.PORT}/api/job-postings", payload, params)
+    const resCreateJob = http.post('http://{__ENV.API_URL}:{__ENV.PORT}/api/job-postings', payload, params)
 
     check(resCreateJob, {'Status create job is 200': (r) => r.status === 200})
 
     const jobId = resCreateJob.json().id;
 
-    const resGetJobCreated = http.get("http://{__ENV.API_URL}:{__ENV.PORT}/api/job-postings/" + jobId);
+    const resGetJobCreated = http.get('http://{__ENV.API_URL}:{__ENV.PORT}/api/job-postings/' + jobId);
 
     check(resGetJobCreated, {'Status get created job is 200': (r) => r.status === 200})
 
