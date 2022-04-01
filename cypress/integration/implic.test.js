@@ -42,12 +42,15 @@ context('Connection', () => {
 context('Navigation', () => {
   beforeEach(() => {
     cy.visit('http://localhost:8080')
-    if(cy.get('.navbar-expand-lg').contains('Se connecter')){
-      cy.get('.navbar-expand-lg').contains('Se connecter').click()
-      cy.get('#floatingUsername').type('admin')
-      cy.get('#floatingPassword').type('password')
-      cy.get('.d-grid > .btn').click()
-    }
+    cy.get('.navbar-expand-lg').contains('Se connecter').click()
+    cy.get('#floatingUsername').type('admin')
+    cy.get('#floatingPassword').type('password')
+    cy.get('.d-grid > .btn').click()
+  })
+  
+  afterEach(()=> {
+    cy.get('#dropdownUser2').click()
+    cy.get(':nth-child(7) > .dropdown-item').click()
   })
 
   it('cy.entreprise() - testing Espace entreprise', () => {
