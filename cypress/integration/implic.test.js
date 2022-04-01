@@ -81,23 +81,6 @@ context('Navigation', () => {
     cy.get('app-training-list > .card')
   })
 
-  // it('cy.addOffer() - Add offer', () => {
-  //   cy.get('.navbar-expand-lg').contains('Offres d\'emploi').click()
-  //   cy.get('button.btn.btn-primary.fw-bold.w-100.px-xxl-4').click()
-  //   cy.get('#titleInput').type('Une offre')
-  //   cy.get('#locationInput').type('Un endroit')
-  //   cy.get('#salaryInput').type('10000')
-  //   cy.get(':nth-child(2) > .row > .col-12 > .ng-pristine > .w-100').click().find('ul li > span').contains('CDI').check()
-  //   // cy.get('span.ng-star-inserted').contains('CDI').click()
-  //   // cy.get('.form-floating.col-12 > .row > .col-12 > .ng-pristine > .w-100').click()
-  //   // cy.get('[ng-reflect-label="Agroalimentaire"] > .p-dropdown-item').click()
-  //   // cy.get(':nth-child(5) > .ng-pristine > .w-100').click()
-  //   // cy.get('[ng-reflect-label="Amazon"] > .p-dropdown-item').click()
-  //   // cy.get('.my-2 > .ng-untouched > .p-editor-container > .p-editor-content > .ql-editor').type('C\'est une description courte')
-  //   // cy.get(':nth-child(7) > .ng-untouched > .p-editor-container > .p-editor-content > .ql-editor').type('C\'est une description pas courte')
-  //   // cy.get('button.btn.btn-primary.w-50').click()
-  // })
-
   it('cy.offers() - Testing filters', () => {
     cy.get('.navbar-expand-lg').contains('Offres d\'emploi').click()
     cy.get('#CDIRadio').click()
