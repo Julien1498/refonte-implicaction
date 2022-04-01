@@ -57,7 +57,7 @@ jobs:
 #        with:
 #          filename: ./k6/test_api.js
 #          flags: --vus 50 --duration 10s
-        run: ./k6 run ./k6/test_api.js
+        run: ./k6 run ./k6_test/test_api.js
     #      - run: docker run --rm -i grafana/k6 --vus 10 --duration 30s run - < ./k6/test_api.js
     #      - run: docker run --rm -i grafana/k6 run - < ./k6/test_jobs_api.js
     #      - run: docker run --rm -i grafana/k6 --vus 10 --duration 30s run - < ./k6/test_jobs_api.js
