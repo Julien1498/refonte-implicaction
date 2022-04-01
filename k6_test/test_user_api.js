@@ -1,4 +1,4 @@
-import http from 'k6_test/http';
+import http from 'k6';
 import { sleep, check } from 'k6';
 
 //Local: host.docker.internal
