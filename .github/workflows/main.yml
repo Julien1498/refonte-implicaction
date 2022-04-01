@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - develop
+      - test/push-ghcr
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -131,10 +132,10 @@ jobs:
       - name: Push db
         run: |
           docker image tag ${{ github.repository_owner }}/implicaction-db:latest \
-          ${{ github.repository_owner }}/implicaction-db:${{ steps.previoustag.outputs.tag }}
-          docker push ${{ github.repository_owner }}/implicaction-db:${{ steps.previoustag.outputs.tag }}
+          ghcr.io/${{ github.repository_owner }}/implicaction-db:${{ steps.previoustag.outputs.tag }}
+          docker push ghcr.io/${{ github.repository_owner }}/implicaction-db:${{ steps.previoustag.outputs.tag }}
       - name: Push app
         run: |
           docker image tag ${{ github.repository_owner }}/implicaction-app:latest \
-          ${{ github.repository_owner }}/implicaction-app:${{ steps.previoustag.outputs.tag }}
-          docker push ${{ github.repository_owner }}/implicaction-app:${{ steps.previoustag.outputs.tag }}
+          ghcr.io/${{ github.repository_owner }}/implicaction-app:${{ steps.previoustag.outputs.tag }}
+          docker push ghcr.io/${{ github.repository_owner }}/implicaction-app:${{ steps.previoustag.outputs.tag }}
