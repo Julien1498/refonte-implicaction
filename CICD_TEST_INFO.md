@@ -48,3 +48,14 @@ Exemple:
 Ici nous simulons 10 utilisateurs virtuel ``--vus 10`` en parallele pour une durée de 30 secondes. 
 
 ## Build et deploiement de l'image docker
+
+Dans notre CI nous faisons le build de deux images Docker. Une image contenant la Base de Données MySQL et une autre contenant l'application (Back & Front).
+Les Dockerfiles utilisé sont dans le dossier ``Dockerfile/``.
+Le fichier ``Dockerfile-mysql`` va tout simplement se baser sur l'image docker ``mysql:8.0.26`` et va ensuite importer et renomer le ficher ``data.sql`` disponible à la racine du projet pour qu'il soit directement traité au lancement du conteneur.
+Le second fichier ``Dockerfile-srping`` va dans un premier temps installer Maven et ensuite build le .jar de l'application via la commande ``mvn -f /usr/local/service/pom.xml package -Dmaven.test.skip=true``.
+Une fois le .jar construit, il sera tout simplement lancer via la commande ``CMD ["java","-jar","/usr/app/app.jar"]``, tout en exposant le port 8080 pour accéder à l'application.
+
+Une fois ces deux images docker build via notre CI et les commandes ``docker build -t ${{ github.repository_owner }}/implicaction-db:latest -f Dockerfiles/Dockerfile-mysql .`` ainsi que ``docker build -t ${{ github.repository_owner }}/implicaction-app:latest -f Dockerfiles/Dockerfile-spring .``, nous allons pourvoir les envoyer sur notre registry.
+Ici nous utilisons le registry de Github (Github Container aka ghcr.io).
+On commence par retagger les images en y ajoutant la version de celle-ci, pour ce faire nous utilisons ``"WyriHaximus/github-action-get-previous-tag@v1"`` qui va automatiquement tagger les images avec la bonne version.
+Une fois que c'est fait, nous allons push les images sur ghcr.io via la commande ``docker push``.
