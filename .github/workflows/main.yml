@@ -82,10 +82,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Running DB from released dev package
-        run: docker run -p 3306:3306 -d ghcr.io/${{ github.repository_owner }}/implicaction-db:${GITHUB_REF##*/}
-      - name: Running APP from released dev package
-        run: docker run -p 8080:8080 -d ghcr.io/${{ github.repository_owner }}/implicaction-app:${GITHUB_REF##*/}
+      - name: Running App from released dev package
+        env:
+          PACKAGE_VERSION: ${GITHUB_REF##*/}
+        run: docker-compose -f docker-compose-dev.yml up -d
       - name: Cypress install and test
         uses: cypress-io/github-action@v2
         with:

@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   implic-db:
-    image: "ghcr.io/implic-sonar-ekip/implicaction-db:dev-0.0.2"
+    image: "ghcr.io/implic-sonar-ekip/implicaction-db:{PACKAGE_VERSION}"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 'password'
@@ -17,9 +17,11 @@ services:
     restart: always
     ports:
       - "9030:8080"
+
   implic-app:
     depends_on: ["implic-db"]
-    image: "ghcr.io/implic-sonar-ekip/implicaction-app:dev-0.0.2"
+    image: "ghcr.io/implic-sonar-ekip/implicaction-app:{PACKAGE_VERSION}"
+    restart: always
     environment:
       DB_URI: mysql://implic-db:3306/implicaction
       DB_USER: root
