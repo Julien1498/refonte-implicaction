@@ -6,40 +6,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  k6:
-    name: K6 load test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Set up Node 14
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - name: Install k6
-        run: |
-            curl https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz -L | tar xvz --strip-components 1
-      - run: docker-compose up -d
-      - run: mvn spring-boot:run -Dspring-boot.run.profiles=local &
-      - run: sleep 120s
-      - run: ./k6 run -e API_URL=localhost -e PORT=8080 k6_test/test_api.js
-      - run: ./k6 run -e API_URL=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
-      - run: ./k6 run -e API_URL=localhost -e PORT=8080 k6_test/test_api.js
-      - run: ./k6 run -e API_URL=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
-      - run: ./k6 run -e API_URL=localhost -e PORT=8080 k6_test/test_api.js
-      - run: ./k6 run -e API_URL=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
   unit-and-sonar:
     name: Unit test and Sonar
     runs-on: ubuntu-latest
@@ -68,43 +34,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Julien1498_refonte-implicaction
-  cypress:
-    name: Cypress
-    needs: unit-and-sonar
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Set up Node 14
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - run: docker-compose up -d
-      - run: mvn spring-boot:run -Dspring-boot.run.profiles=local &
-      - name: Cypress install and test
-        uses: cypress-io/github-action@v2
-        with:
-          record: true
-          wait-on: 'http://localhost:8080'
-          wait-on-timeout: 120
-        env:
-          CYPRESS_RECORD_KEY: ${{secrets.CYPRESS_TOKEN}}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build-and-push:
     name: Building and push docker image on Github container
-    needs: cypress
+    needs: unit-and-sonar
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -136,3 +68,72 @@ jobs:
           docker image tag ${{ github.repository_owner }}/implicaction-app:latest \
           ghcr.io/${{ github.repository_owner }}/implicaction-app:${{ steps.previoustag.outputs.tag }}
           docker push ghcr.io/${{ github.repository_owner }}/implicaction-app:${{ steps.previoustag.outputs.tag }}
+  cypress:
+    name: Cypress
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Set up Node 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: docker-compose up -d
+      - run: mvn spring-boot:run -Dspring-boot.run.profiles=local &
+      - name: Cypress install and test
+        uses: cypress-io/github-action@v2
+        with:
+          record: true
+          wait-on: 'http://localhost:8080'
+          wait-on-timeout: 120
+        env:
+          CYPRESS_RECORD_KEY: ${{secrets.CYPRESS_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  k6:
+    name: K6 load test
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Set up Node 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install k6
+        run: |
+          curl https://github.com/grafana/k6/releases/download/v0.37.0/k6-v0.37.0-linux-amd64.tar.gz -L | tar xvz --strip-components 1
+      - run: docker-compose up -d
+      - run: mvn spring-boot:run -Dspring-boot.run.profiles=local &
+      - run: sleep 120s
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 k6_test/test_api.js
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 k6_test/test_api.js
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 k6_test/test_api.js
+      - run: ./k6 run -e API_URL=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
