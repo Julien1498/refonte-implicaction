@@ -85,7 +85,7 @@ jobs:
       - name: Running App from released dev package
         env:
           PACKAGE_VERSION: ${GITHUB_REF##*/}
-        run : docker-compose -f docker-compose-dev.yml up -d
+        run : export PACKAGE_VERSION=$(echo ${GITHUB_REF##*/}) && docker-compose -f docker-compose-dev.yml up -d
       - name: Cypress install and test
         uses: cypress-io/github-action@v2
         with:
@@ -115,7 +115,7 @@ jobs:
       - name: Running App from released dev package
         env:
           PACKAGE_VERSION: ${GITHUB_REF##*/}
-        run : docker-compose -f docker-compose-dev.yml up -d
+        run : export PACKAGE_VERSION=$(echo ${GITHUB_REF##*/}) && docker-compose -f docker-compose-dev.yml up -d
       - run: sleep 120s
       - run: ./k6 run -e API_URL=localhost -e PORT=8080 k6_test/test_api.js
       - run: ./k6 run -e API_URL=localhost -e PORT=8080 --vus 10 --duration 30s k6_test/test_api.js
